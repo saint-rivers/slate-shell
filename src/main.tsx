@@ -10,6 +10,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   </React.StrictMode>,
 )
 
-invoke('greet', { name: 'World' })
-  // `invoke` returns a Promise
-  .then((response) => console.log(response))
+// invoke('greet', { name: 'World' })
+//   // `invoke` returns a Promise
+//   .then((response) => console.log(response))
