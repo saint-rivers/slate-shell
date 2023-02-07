@@ -1,17 +1,11 @@
 import "./CommandPromptInput.css";
 import { invoke } from "@tauri-apps/api";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { log } from "console";
 
 function CommandPromptInput() {
   const [userInput, setUserInput] = useState<string>("");
-  const [output, setOutput] = useState<string>("");
-
-  interface Output {
-    status: any;
-    stdout: string;
-    stderr: string;
-  }
+  const [output, setOutput] = useState<string[]>([]);
 
   function isOutput(obj: unknown): obj is string {
     // console.log(JSON.stringify(obj));
@@ -26,8 +20,8 @@ function CommandPromptInput() {
           invoke("take_command", { name: userInput })
             .then((response) => {
               if (isOutput(response)) {
-                console.log(response);
-                setOutput(response);
+                setOutput([response, ...output]);
+                setUserInput("");
               }
             })
             .catch((err) => {
@@ -37,12 +31,20 @@ function CommandPromptInput() {
         <input
           type='text'
           placeholder='input command'
+          value={userInput}
           onChange={(e) => {
             setUserInput(e.target.value);
           }}
         />
 
-        <p>{output}</p>
+        <div>
+          {output.map((data, index) => (
+            <div key={index}>
+              <p>{data}</p>
+              <hr />
+            </div>
+          ))}
+        </div>
       </form>
     </div>
   );
